@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070a08" />
+    <meta
+      name="description"
+      content="Arsenal Linux: la base de datos interactiva de comandos de ciberseguridad, hacking ético, administración de sistemas y redes. Parámetros explicados, ejemplos reales y búsqueda instantánea."
+    />
+    <meta name="author" content="Arsenal Linux" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Arsenal Linux — La base de datos de comandos definitiva" />
+    <meta
+      property="og:description"
+      content="Explora, entiende y domina cientos de comandos de Linux para red team, blue team, sysadmin y redes. Todo en tu navegador."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Arsenal Linux — La base de datos de comandos definitiva</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('arsenal-theme');
+          var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="padding: 2rem; font-family: system-ui">
+        <h1>Arsenal Linux</h1>
+        <p>Activa JavaScript para explorar la base de datos de comandos.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

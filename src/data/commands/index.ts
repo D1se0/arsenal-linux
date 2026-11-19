@@ -1,0 +1,76 @@
+import type { CategoryId, Command, Role, Tactic } from '../types';
+import { CATEGORIES, CATEGORY_BY_ID } from '../categories';
+import { reconCommands } from './recon';
+import { scanningCommands } from './scanning';
+import { webCommands } from './web';
+import { exploitCommands } from './exploit';
+import { passwordCommands } from './passwords';
+import { networkCommands } from './network';
+import { sysadminCommands } from './sysadmin';
+import { shellCommands } from './shell';
+import { forensicsCommands } from './forensics';
+import { hardeningCommands } from './hardening';
+import { malwareCommands } from './malware';
+import { wirelessCommands } from './wireless';
+import { cloudCommands } from './cloud';
+
+export const COMMANDS: Command[] = [
+  ...reconCommands,
+  ...scanningCommands,
+  ...webCommands,
+  ...exploitCommands,
+  ...passwordCommands,
+  ...networkCommands,
+  ...sysadminCommands,
+  ...shellCommands,
+  ...forensicsCommands,
+  ...hardeningCommands,
+  ...malwareCommands,
+  ...wirelessCommands,
+  ...cloudCommands,
+].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+export const COMMAND_BY_ID = new Map(COMMANDS.map((command) => [command.id, command]));
+
+/** Related command IDs cleaned to those that actually exist in the database. */
+export const RELATED_BY_COMMAND = new Map(
+  COMMANDS.map((command) => [
+    command.id,
+    (command.related ?? []).filter((id) => COMMAND_BY_ID.has(id)),
+  ]),
+);
+
+export const CATEGORY_COUNTS = Object.fromEntries(
+  CATEGORIES.map((category) => [
+    category.id,
+    COMMANDS.filter((command) => command.category === category.id).length,
+  ]),
+) as Record<CategoryId, number>;
+
+export const ROLE_COUNTS = Object.fromEntries(
+  (['red', 'blue', 'admin', 'network'] as Role[]).map((role) => [
+    role,
+    COMMANDS.filter((command) => command.roles.includes(role)).length,
+  ]),
+) as Record<Role, number>;
+
+export const TACTIC_COUNTS = COMMANDS.reduce<Partial<Record<Tactic, number>>>((acc, command) => {
+  command.tactics?.forEach((tactic) => {
+    acc[tactic] = (acc[tactic] ?? 0) + 1;
+  });
+  return acc;
+}, {});
+
+export const COMMAND_STATS = {
+  commands: COMMANDS.length,
+  categories: CATEGORIES.length,
+  examples: COMMANDS.reduce((total, command) => total + command.examples.length, 0),
+  parameters: COMMANDS.reduce((total, command) => total + command.params.length, 0),
+  tactics: Object.keys(TACTIC_COUNTS).length,
+  red: ROLE_COUNTS.red,
+  blue: ROLE_COUNTS.blue,
+};
+
+export function getCategory(command: Command) {
+  return CATEGORY_BY_ID[command.category];
+}
