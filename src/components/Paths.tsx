@@ -37,7 +37,7 @@ export function Paths({ onOpenCommand }: { onOpenCommand: (id: string) => void }
               <em>Es un camino.</em>
             </>
           }
-          description="Cuatro itinerarios con orden, motivo y progreso guardado en tu navegador. Empieza por donde estés y marca cada paso cuando lo domines."
+          description="Seis itinerarios con orden, motivo y progreso guardado en tu navegador. Empieza por donde estés y marca cada paso cuando lo domines."
         />
 
         <div className="paths">

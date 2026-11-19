@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "audit:tools": "tsx scripts/audit-toolchain.ts",
     "validate": "tsx scripts/validate-commands.ts"
   },
   "dependencies": {

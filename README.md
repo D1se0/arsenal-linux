@@ -2,7 +2,7 @@
 
 **La base de datos de comandos de Linux para seguridad, sistemas y redes.**
 
-Una aplicación estática construida con **React + Vite + TypeScript** que reúne **144 comandos** de Linux con **1.177 flags explicadas** y **432 ejemplos** para red team, blue team, sysadmin y administración de redes.
+Una aplicación estática construida con **React + Vite + TypeScript** que reúne **279 comandos** de Linux con **2.004 flags explicadas** y **806 ejemplos** para red team, blue team, sysadmin y administración de redes.
 
 > Documentación, no ejecución. Usa estos comandos solo sobre sistemas propios o con autorización escrita.
 
@@ -10,15 +10,15 @@ Una aplicación estática construida con **React + Vite + TypeScript** que reún
 
 ## Qué incluye
 
-- **144 fichas de comandos** organizadas en 13 dominios: reconocimiento, escaneo, hacking web, explotación, contraseñas, redes, administración, shell, DFIR, hardening, malware, wireless y cloud.
+- **279 fichas de comandos** organizadas en 13 dominios: reconocimiento, escaneo, hacking web, explotación, contraseñas, redes, administración, shell, DFIR, hardening, malware, wireless y cloud.
 - **Búsqueda instantánea** por comando, alias, flag, tag, táctica o texto de los ejemplos.
 - **Filtros combinables** por dominio, rol, dificultad, riesgo y favoritos.
 - **Dossier por comando** con descripción, sintaxis, tabla de parámetros, ejemplos comentados, buenas prácticas, tácticas MITRE y comandos relacionados.
 - **Enlaces directos** a cada ficha mediante `?cmd=<id>`.
 - **Paleta de búsqueda** con `Ctrl+K` o `/`.
 - **Constructor de comandos** interactivo para nmap, ffuf, tcpdump, find, journalctl, ssh y docker.
-- **Rutas de aprendizaje** con progreso persistido en `localStorage`.
-- **Chuletas rápidas**, glosario y preguntas frecuentes.
+- **Seis rutas de aprendizaje** con progreso persistido en `localStorage`.
+- **Siete chuletas rápidas**, glosario ampliado y preguntas frecuentes.
 - **Mapa de cobertura MITRE ATT&CK** por táctica.
 - Tema oscuro/claro, animaciones con `IntersectionObserver`, diseño responsive y soporte de `prefers-reduced-motion`.
 - Sin backend, sin cookies y sin telemetría: todo ocurre en el navegador.
@@ -52,7 +52,8 @@ npm run validate   # valida IDs, campos, relaciones, rutas y constructor
 npm test           # tests de búsqueda, datos, componentes y App
 npm run build      # typecheck + build de producción en dist/
 npm run preview    # sirve dist/
-npm run test:e2e   # Playwright (requiere build previo)
+npm run test:e2e   # Playwright desktop + móvil (requiere build previo)
+npm run audit:tools # presencia, man y ayuda de las herramientas instaladas
 ```
 
 ## Despliegue en GitHub Pages
@@ -126,7 +127,7 @@ El validador comprueba IDs duplicados, campos vacíos, categorías, roles, dific
 src/
   components/        # Nav, Hero, Explorer, CommandDrawer, Builder, etc.
   data/
-    commands/        # 13 archivos de fichas + agregador
+    commands/        # colecciones de fichas por dominio + agregador
     categories.ts    # metadatos visuales de cada dominio
     site.ts          # rutas, chuletas, glosario y FAQ
     builder.ts       # especificaciones del constructor
@@ -138,7 +139,9 @@ src/
   test/              # setup de jsdom
 scripts/
   validate-commands.ts
-tests/e2e/           # Playwright
+  audit-toolchain.ts # auditoría local de binarios y ayuda
+tests/e2e/           # Playwright (incluye cobertura total del catálogo)
+audit/               # informe local de herramientas (ignorado por Git)
 .github/workflows/   # deploy a Pages
 ```
 

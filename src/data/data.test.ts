@@ -7,10 +7,10 @@ import { DIFFICULTIES, DANGERS, ROLES, TACTICS } from './types';
 
 describe('command database', () => {
   it('tiene una base amplia y sin IDs duplicados', () => {
-    expect(COMMANDS.length).toBeGreaterThanOrEqual(140);
+    expect(COMMANDS.length).toBeGreaterThanOrEqual(270);
     expect(new Set(COMMANDS.map((command) => command.id)).size).toBe(COMMANDS.length);
-    expect(COMMAND_STATS.examples).toBeGreaterThan(400);
-    expect(COMMAND_STATS.parameters).toBeGreaterThan(1000);
+    expect(COMMAND_STATS.examples).toBeGreaterThan(800);
+    expect(COMMAND_STATS.parameters).toBeGreaterThan(1900);
   });
 
   it('cubre todas las categorías con varios comandos', () => {

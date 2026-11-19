@@ -203,6 +203,96 @@ export const LEARNING_PATHS: LearningPath[] = [
       },
     ],
   },
+  {
+    id: 'web',
+    title: 'Hacking web',
+    role: 'De la superficie a la evidencia',
+    accent: 'violet',
+    description:
+      'Una ruta para no disparar herramientas al azar: identificar la tecnología, descubrir rutas y parámetros, confirmar la vulnerabilidad y documentar el impacto con evidencia.',
+    steps: [
+      {
+        commandId: 'whatweb',
+        title: 'Reconocer la tecnología',
+        why: 'Antes de probar nada, identifica servidor, CMS, framework y versiones. La tecnología condiciona qué pruebas tienen sentido.',
+      },
+      {
+        commandId: 'ffuf',
+        title: 'Descubrir rutas y archivos',
+        why: 'El mapa visible casi nunca es todo. Aprende a calibrar el 404 y a filtrar por tamaño para no perderte en el ruido.',
+      },
+      {
+        commandId: 'arjun',
+        title: 'Encontrar parámetros ocultos',
+        why: 'Una ruta sin parámetros visibles puede aceptar entradas por GET, POST o JSON. Los parámetros olvidados son superficie real.',
+      },
+      {
+        commandId: 'sqlmap',
+        title: 'Confirmar una inyección SQL',
+        why: 'Detecta, enumera y demuestra impacto sin volcar datos innecesarios. La evidencia mínima es más profesional y más segura.',
+      },
+      {
+        commandId: 'xsstrike',
+        title: 'Analizar XSS por contexto',
+        why: 'No todos los reflejos ejecutan JavaScript. Aprende a distinguir HTML, atributo y contexto DOM antes de reportar.',
+      },
+      {
+        commandId: 'ssrfmap',
+        title: 'Medir el alcance de un SSRF',
+        why: 'Un SSRF puede leer archivos, alcanzar metadatos cloud o escanear la red interna. Documenta el impacto exacto, no solo el eco.',
+      },
+      {
+        commandId: 'nuclei',
+        title: 'Cerrar con comprobaciones reproducibles',
+        why: 'Las plantillas convierten hallazgos en pruebas repetibles. Revisa falsos positivos y guarda la versión de las plantillas usadas.',
+      },
+    ],
+  },
+  {
+    id: 'cloud',
+    title: 'Cloud y contenedores',
+    role: 'Construir, escanear, firmar',
+    accent: 'indigo',
+    description:
+      'La cadena de suministro moderna: empaquetar, inventariar dependencias, escanear vulnerabilidades, firmar artefactos y desplegar con controles verificables.',
+    steps: [
+      {
+        commandId: 'docker',
+        title: 'Entender la imagen que despliegas',
+        why: 'Una imagen no es una caja negra: revisa capas, usuario, variables y puertos antes de publicarla.',
+      },
+      {
+        commandId: 'trivy',
+        title: 'Escanear vulnerabilidades',
+        why: 'Detecta paquetes y configuraciones de riesgo en la imagen. Un escaneo sin política de bloqueo es solo un informe.',
+      },
+      {
+        commandId: 'syft',
+        title: 'Generar el SBOM',
+        why: 'Sin inventario de dependencias no puedes responder qué te afecta. Genera el SBOM en la misma build que la imagen.',
+      },
+      {
+        commandId: 'cosign',
+        title: 'Firmar y verificar artefactos',
+        why: 'Una firma válida demuestra quién publicó la imagen. La verificación debe ser obligatoria antes de desplegar.',
+      },
+      {
+        commandId: 'kubectl',
+        title: 'Revisar el manifiesto en seco',
+        why: 'Usa dry-run y diff para detectar cambios antes de tocar el cluster. El contexto y el namespace importan tanto como el YAML.',
+      },
+      {
+        commandId: 'helm',
+        title: 'Desplegar de forma reproducible',
+        why: 'Fija versiones, renderiza templates y usa rollback. Un chart sin versión fija no es reproducible.',
+      },
+      {
+        commandId: 'kube-bench',
+        title: 'Auditar el cluster',
+        why: 'Comprueba los controles CIS del plano de control y de los nodos. Prioriza los fallos explotables en tu modelo de amenaza.',
+      },
+    ],
+  },
 ];
 
 export interface CheatItem {
@@ -311,6 +401,42 @@ export const CHEATSHEETS: CheatSheet[] = [
       { label: 'HTTP con tiempos', code: 'curl -sS -o /dev/null -w "%{http_code} %{time_total}s\\n" https://host', desc: 'Código de estado y tiempo total.' },
     ],
   },
+  {
+    id: 'web',
+    label: 'Web',
+    title: 'Del fingerprint a la evidencia',
+    description:
+      'La secuencia corta para revisar una aplicación: tecnología, rutas, parámetros, inyecciones y validación final. Ajusta siempre el alcance.',
+    items: [
+      { label: 'Fingerprint', code: 'whatweb -a 3 https://example.com', desc: 'Servidor, CMS, frameworks y versiones declaradas.' },
+      { label: 'Rutas', code: 'ffuf -w wordlist.txt -u https://example.com/FUZZ -mc 200,204,301,302,401,403', desc: 'Descubre rutas y conserva también las protegidas.' },
+      { label: 'Parámetros', code: 'arjun -u https://example.com/api -m GET', desc: 'Busca parámetros aceptados que no aparecen en la URL.' },
+      { label: 'SQLi', code: 'sqlmap -u "https://example.com/item?id=1" --batch --dbs', desc: 'Confirma inyección y enumera bases de datos.' },
+      { label: 'XSS', code: 'xsstrike -u "https://example.com/search?q=test" --skip', desc: 'Analiza el contexto del reflejo antes de confirmar.' },
+      { label: 'SSRF', code: 'ssrfmap -r request.txt -p url -m readfiles', desc: 'Prueba lectura de archivos desde un parámetro vulnerable.' },
+      { label: 'Plantillas', code: 'nuclei -u https://example.com -severity critical,high', desc: 'Comprobaciones reproducibles de alta severidad.' },
+      { label: 'JWT', code: "cut -d. -f2 token.jwt | tr '_-' '/+' | base64 -d 2>/dev/null | jq .", desc: 'Inspecciona el payload de un token sin verificarlo.' },
+      { label: 'Cabeceras', code: 'curl -sI https://example.com', desc: 'Revisa servidor, cookies, CORS y políticas de seguridad.' },
+    ],
+  },
+  {
+    id: 'cloud',
+    label: 'Cloud',
+    title: 'Supply chain en nueve líneas',
+    description:
+      'El mínimo control para una imagen y un cluster: inventario, escaneo, firma, validación de manifiestos y auditoría CIS.',
+    items: [
+      { label: 'SBOM', code: 'syft image:app:1.4.2 -o cyclonedx-json --file sbom.json', desc: 'Inventario de componentes en formato CycloneDX.' },
+      { label: 'Vulnerabilidades', code: 'trivy image --severity HIGH,CRITICAL app:1.4.2', desc: 'Filtra solo los hallazgos de mayor impacto.' },
+      { label: 'Firmar', code: 'cosign sign --key cosign.key registry.example.com/app:1.4.2', desc: 'Firma la imagen con la clave del proyecto.' },
+      { label: 'Verificar', code: 'cosign verify --key cosign.pub registry.example.com/app:1.4.2', desc: 'Falla si la imagen no tiene una firma válida.' },
+      { label: 'Manifiesto', code: 'kubectl apply --dry-run=server -f deploy.yaml', desc: 'Valida contra la API sin crear recursos.' },
+      { label: 'Render Helm', code: 'helm template app ./chart -f values-prod.yaml', desc: 'Revisa el YAML final antes de instalar.' },
+      { label: 'CIS', code: 'kube-bench run --targets master,node', desc: 'Audita el plano de control y los nodos.' },
+      { label: 'Secretos', code: 'gitleaks detect --source . --no-banner', desc: 'Busca credenciales en el historial del repositorio.' },
+      { label: 'Rootless', code: 'podman run --rm -it alpine sh', desc: 'Prueba un contenedor sin daemon ni root.' },
+    ],
+  },
 ];
 
 export const GLOSSARY = [
@@ -393,6 +519,36 @@ export const GLOSSARY = [
     term: 'SOC',
     definition:
       'Security Operations Center: equipo y procesos que monitorizan alertas, investigan y responden. Su calidad depende de la telemetría y del contexto, no solo de las herramientas.',
+  },
+  {
+    term: 'SSRF',
+    definition:
+      'Server-Side Request Forgery: la aplicación realiza una petición a una URL controlada por el atacante. Puede alcanzar servicios internos, metadatos cloud o archivos locales.',
+  },
+  {
+    term: 'AD CS',
+    definition:
+      'Active Directory Certificate Services: infraestructura de certificados de Windows. Una plantilla mal configurada puede permitir suplantar cuentas y persistir aunque se cambie la contraseña.',
+  },
+  {
+    term: 'SBOM',
+    definition:
+      'Software Bill of Materials: inventario de componentes y dependencias de un artefacto. Permite saber qué vulnerabilidades afectan realmente a lo que despliegas.',
+  },
+  {
+    term: 'EDR',
+    definition:
+      'Endpoint Detection and Response: telemetría y respuesta en el endpoint. Detecta comportamiento, no solo firmas, y permite aislar un host comprometido.',
+  },
+  {
+    term: 'Kerberoasting',
+    definition:
+      'Solicitud de tickets de servicio Kerberos para crackear offline la contraseña de la cuenta asociada. Se mitiga con contraseñas largas y cuentas de servicio gestionadas.',
+  },
+  {
+    term: 'WPA3',
+    definition:
+      'Estándar Wi-Fi que sustituye el handshake WPA2-PSK por SAE y añade protección contra ataques de diccionario offline. Requiere compatibilidad de AP y clientes.',
   },
 ];
 

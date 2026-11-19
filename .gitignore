@@ -6,6 +6,7 @@ dist-ssr
 coverage
 playwright-report
 test-results
+audit
 .vite
 *.tsbuildinfo
 .env

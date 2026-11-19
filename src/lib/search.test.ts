@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { COMMANDS } from '../data/commands';
+import { CATEGORIES } from '../data/categories';
+import { COMMANDS, CATEGORY_COUNTS, ROLE_COUNTS } from '../data/commands';
+import { DANGERS, DIFFICULTIES, ROLES } from '../data/types';
 import type { ExplorerFilters } from './search';
 import { filterCommands, normalize, scoreCommand, suggestCommands } from './search';
 
@@ -62,6 +64,32 @@ describe('search engine', () => {
     const ranks = { bajo: 0, medio: 1, alto: 2, critico: 3 } as const;
     for (let i = 1; i < sorted.length; i += 1) {
       expect(ranks[sorted[i - 1].danger]).toBeGreaterThanOrEqual(ranks[sorted[i].danger]);
+    }
+  });
+
+  it(`encuentra cada uno de los ${COMMANDS.length} comandos por su nombre exacto`, () => {
+    for (const command of COMMANDS) {
+      const results = filterCommands(COMMANDS, filters({ query: command.name }));
+      expect(results[0]?.id, command.name).toBe(command.id);
+    }
+  }, 15_000);
+
+  it('los contadores de todos los filtros coinciden con el catálogo', () => {
+    for (const category of CATEGORIES) {
+      expect(filterCommands(COMMANDS, filters({ categories: [category.id] })).length, category.id).toBe(
+        CATEGORY_COUNTS[category.id],
+      );
+    }
+    for (const role of ROLES) {
+      expect(filterCommands(COMMANDS, filters({ roles: [role.id] })).length, role.id).toBe(ROLE_COUNTS[role.id]);
+    }
+    for (const difficulty of DIFFICULTIES) {
+      const expected = COMMANDS.filter((command) => command.difficulty === difficulty).length;
+      expect(filterCommands(COMMANDS, filters({ difficulties: [difficulty] })).length, difficulty).toBe(expected);
+    }
+    for (const danger of DANGERS) {
+      const expected = COMMANDS.filter((command) => command.danger === danger).length;
+      expect(filterCommands(COMMANDS, filters({ dangers: [danger] })).length, danger).toBe(expected);
     }
   });
 

@@ -18,7 +18,7 @@ test('carga la home y muestra el arsenal', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('El arsenal');
   await expect(page.getByRole('heading', { name: /Toda la terminal/i })).toBeVisible();
-  await expect(page.getByText('144').first()).toBeVisible();
+  await expect(page.getByText('279').first()).toBeVisible();
   await expect(page.locator('.cmd-card').first()).toBeVisible();
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);

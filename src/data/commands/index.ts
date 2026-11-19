@@ -13,6 +13,20 @@ import { hardeningCommands } from './hardening';
 import { malwareCommands } from './malware';
 import { wirelessCommands } from './wireless';
 import { cloudCommands } from './cloud';
+import { extraReconCommands } from './extra-recon';
+import { extraScanningCommands } from './extra-scanning';
+import { extraWebCommands } from './extra-web';
+import { extraExploitCommands } from './extra-exploit';
+import { extraPasswordCommands } from './extra-passwords';
+import { extraNetworkCommands } from './extra-network';
+import { extraSysadminCommands } from './extra-sysadmin';
+import { extraShellCommands } from './extra-shell';
+import { extraForensicsCommands } from './extra-forensics';
+import { extraHardeningCommands } from './extra-hardening';
+import { extraMalwareCommands } from './extra-malware';
+import { extraWirelessCommands } from './extra-wireless';
+import { extraCloudCommands } from './extra-cloud';
+import { extra2ToolsCommands } from './extra2-tools';
 
 export const COMMANDS: Command[] = [
   ...reconCommands,
@@ -28,6 +42,20 @@ export const COMMANDS: Command[] = [
   ...malwareCommands,
   ...wirelessCommands,
   ...cloudCommands,
+  ...extraReconCommands,
+  ...extraScanningCommands,
+  ...extraWebCommands,
+  ...extraExploitCommands,
+  ...extraPasswordCommands,
+  ...extraNetworkCommands,
+  ...extraSysadminCommands,
+  ...extraShellCommands,
+  ...extraForensicsCommands,
+  ...extraHardeningCommands,
+  ...extraMalwareCommands,
+  ...extraWirelessCommands,
+  ...extraCloudCommands,
+  ...extra2ToolsCommands,
 ].sort((a, b) => a.name.localeCompare(b.name, 'es'));
 
 export const COMMAND_BY_ID = new Map(COMMANDS.map((command) => [command.id, command]));
