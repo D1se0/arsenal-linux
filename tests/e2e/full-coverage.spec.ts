@@ -8,6 +8,7 @@ import {
   ROLE_COUNTS,
 } from '../../src/data/commands';
 import { CHEATSHEETS, FAQS, GLOSSARY, LEARNING_PATHS } from '../../src/data/site';
+import { SCRIPT_MANUALS } from '../../src/data/scripting';
 import { ROLES } from '../../src/data/types';
 
 test.setTimeout(240_000);
@@ -39,7 +40,7 @@ async function openCommandById(page: Page, id: string) {
   }, id);
 }
 
-test('abre y renderiza las 279 fichas con sus contadores', async ({ page }) => {
+test('abre y renderiza todas las fichas con sus contadores', async ({ page }) => {
   await page.goto(`/?cmd=${COMMANDS[0].id}`);
   const drawer = page.getByRole('dialog');
   await expect(drawer).toBeVisible();
@@ -92,6 +93,31 @@ test('recorre las siete chuletas y sus 64 entradas', async ({ page }) => {
     await expect(page.locator('.cheat')).toHaveCount(sheet.items.length);
     await expect(page.locator('.cheat__code')).toHaveText(sheet.items.map((item) => item.code));
   }
+});
+
+test('recorre los manuales de scripting y todas sus recetas', async ({ page }) => {
+  await page.goto('/#scripting');
+  const section = page.locator('#scripting');
+  await expect(section).toBeVisible();
+
+  for (const manual of SCRIPT_MANUALS) {
+    const tab = section.getByRole('tab', { name: new RegExp(`^${escapeRegex(manual.label)}`) });
+    await tab.click();
+    await expect(section.locator('.topic-card')).toHaveCount(manual.chapters[0].topics.length);
+
+    for (const chapter of manual.chapters) {
+      await section.getByRole('button', { name: new RegExp(escapeRegex(chapter.title)) }).click();
+      await expect(section.locator('.scripting-chapter-head h3')).toHaveText(chapter.title);
+      await expect(section.locator('.topic-card')).toHaveCount(chapter.topics.length);
+      await expect(section.locator('.topic-card h4')).toHaveText(chapter.topics.map((topic) => topic.title));
+    }
+
+    await section.getByRole('button', { name: /Recetas por rol/ }).click();
+    await expect(section.locator('.recipe-card')).toHaveCount(manual.recipes.length);
+    await expect(section.locator('.recipe-card h4')).toHaveText(manual.recipes.map((recipe) => recipe.title));
+  }
+
+  await expect(section.locator('.snippet')).toHaveCount(SCRIPT_MANUALS.at(-1)?.recipes.length ?? 0);
 });
 
 test('abre los 22 términos del glosario y las 8 FAQ', async ({ page }) => {
@@ -162,7 +188,7 @@ test('los filtros coinciden con el catálogo completo', async ({ page }, testInf
   if (mobile) await filters.getByRole('button', { name: 'Cerrar filtros' }).click();
 });
 
-test('la paginación llega a las 279 tarjetas y cambia de vista', async ({ page }) => {
+test('la paginación llega a todas las tarjetas y cambia de vista', async ({ page }) => {
   await page.goto('/');
   const cards = page.locator('.cmd-card');
   await expect(cards).toHaveCount(18);

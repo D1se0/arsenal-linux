@@ -40,6 +40,16 @@ for (const command of COMMANDS) {
   if (!command.tags.length) errors.push(`${command.id}: sin tags`);
   for (const param of command.params) {
     if (!param.flag || !param.desc) errors.push(`${command.id}: parámetro incompleto`);
+    const seenOptions = new Set<string>();
+    for (const option of param.options ?? []) {
+      if (!option.value.trim() || !option.desc.trim()) {
+        errors.push(`${command.id}: subopción incompleta en ${param.flag}`);
+      }
+      if (seenOptions.has(option.value)) {
+        errors.push(`${command.id}: subopción duplicada ${option.value} en ${param.flag}`);
+      }
+      seenOptions.add(option.value);
+    }
   }
   for (const example of command.examples) {
     if (!roleIds.has(example.kind)) errors.push(`${command.id}: tipo de ejemplo inválido (${example.kind})`);

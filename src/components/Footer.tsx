@@ -60,6 +60,7 @@ export function Footer() {
           <div>
             <p className="footer__label">Referencia</p>
             <a href="#chuleta">Chuletas rápidas</a>
+            <a href="#scripting">Manuales Bash y Python</a>
             <a href="#glosario">Glosario</a>
             <a href="#glosario-faq">Preguntas frecuentes</a>
           </div>

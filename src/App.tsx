@@ -8,6 +8,7 @@ import { Builder } from './components/Builder';
 import { Tactics } from './components/Tactics';
 import { Paths } from './components/Paths';
 import { Cheatsheets } from './components/Cheatsheets';
+import { Scripting } from './components/Scripting';
 import { Glossary } from './components/Glossary';
 import { CtaBand, Footer } from './components/Footer';
 import { CommandDrawer } from './components/CommandDrawer';
@@ -107,6 +108,7 @@ export default function App() {
         <Tactics onSearch={exploreSearch} />
         <Paths onOpenCommand={openCommand} />
         <Cheatsheets />
+        <Scripting />
         <Glossary />
         <CtaBand onOpenPalette={() => setPaletteOpen(true)} />
       </main>

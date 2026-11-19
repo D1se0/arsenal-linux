@@ -4,6 +4,7 @@ export const NAV_LINKS = [
   { id: 'tacticas', label: 'Tácticas' },
   { id: 'rutas', label: 'Rutas' },
   { id: 'chuleta', label: 'Chuleta' },
+  { id: 'scripting', label: 'Scripting' },
   { id: 'glosario', label: 'Glosario' },
 ];
 

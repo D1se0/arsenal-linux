@@ -19,10 +19,19 @@ export type Role = 'red' | 'blue' | 'admin' | 'network';
 export type Difficulty = 'inicial' | 'intermedio' | 'avanzado';
 export type Danger = 'bajo' | 'medio' | 'alto' | 'critico';
 
+export interface CommandSuboption {
+  /** Valor o variante que acepta el parámetro, por ejemplo `vuln` o `json`. */
+  value: string;
+  desc: string;
+  example?: string;
+}
+
 export interface CommandParam {
   flag: string;
   desc: string;
   example?: string;
+  /** Valores discretos del parámetro; se muestran como un desplegable explicado. */
+  options?: CommandSuboption[];
 }
 
 export interface CommandExample {

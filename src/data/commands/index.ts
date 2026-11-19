@@ -27,6 +27,28 @@ import { extraMalwareCommands } from './extra-malware';
 import { extraWirelessCommands } from './extra-wireless';
 import { extraCloudCommands } from './extra-cloud';
 import { extra2ToolsCommands } from './extra2-tools';
+import { extra3ToolsCommands } from './extra3-tools';
+import { extra4ToolsCommands } from './extra4-tools';
+import { EXTRA_EXAMPLES } from './extra-examples';
+import { PARAM_OPTIONS } from './param-options';
+import { MORE_PARAM_OPTIONS } from './param-options-more';
+
+const ALL_PARAM_OPTIONS = { ...PARAM_OPTIONS, ...MORE_PARAM_OPTIONS };
+
+function enrichCommand(command: Command): Command {
+  const options = ALL_PARAM_OPTIONS[command.id];
+  const extraExamples = EXTRA_EXAMPLES[command.id];
+  if (!options && !extraExamples) return command;
+  return {
+    ...command,
+    params: command.params.map((param) =>
+      param.options?.length || !options?.[param.flag]
+        ? param
+        : { ...param, options: options[param.flag] },
+    ),
+    examples: [...command.examples, ...(extraExamples ?? [])],
+  };
+}
 
 export const COMMANDS: Command[] = [
   ...reconCommands,
@@ -56,7 +78,11 @@ export const COMMANDS: Command[] = [
   ...extraWirelessCommands,
   ...extraCloudCommands,
   ...extra2ToolsCommands,
-].sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  ...extra3ToolsCommands,
+  ...extra4ToolsCommands,
+]
+  .map(enrichCommand)
+  .sort((a, b) => a.name.localeCompare(b.name, 'es'));
 
 export const COMMAND_BY_ID = new Map(COMMANDS.map((command) => [command.id, command]));
 
@@ -89,11 +115,21 @@ export const TACTIC_COUNTS = COMMANDS.reduce<Partial<Record<Tactic, number>>>((a
   return acc;
 }, {});
 
+const subparameters = COMMANDS.reduce(
+  (total, command) =>
+    total + command.params.reduce((sum, param) => sum + (param.options?.length ?? 0), 0),
+  0,
+);
+
+const parameters = COMMANDS.reduce((total, command) => total + command.params.length, 0);
+
 export const COMMAND_STATS = {
   commands: COMMANDS.length,
   categories: CATEGORIES.length,
   examples: COMMANDS.reduce((total, command) => total + command.examples.length, 0),
-  parameters: COMMANDS.reduce((total, command) => total + command.params.length, 0),
+  parameters,
+  subparameters,
+  documentedOptions: parameters + subparameters,
   tactics: Object.keys(TACTIC_COUNTS).length,
   red: ROLE_COUNTS.red,
   blue: ROLE_COUNTS.blue,

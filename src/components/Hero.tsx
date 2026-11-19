@@ -250,7 +250,7 @@ export function Hero({
               <CountUp value={COMMAND_STATS.parameters} />
             </strong>
             <span>flags</span>
-            <small>con su efecto real</small>
+            <small>+{COMMAND_STATS.subparameters} subopciones anidadas</small>
           </div>
         </div>
       </div>

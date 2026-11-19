@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
+  ChevronDown,
   Lightbulb,
   ListTree,
   Star,
@@ -74,6 +75,10 @@ export function CommandDrawer({
   const shareLink = typeof window !== 'undefined'
     ? `${window.location.origin}${window.location.pathname}?cmd=${command.id}`
     : '';
+  const optionCount = command.params.reduce(
+    (total, param) => total + (param.options?.length ?? 0),
+    0,
+  );
 
   return (
     <div className="drawer" role="presentation">
@@ -225,16 +230,59 @@ export function CommandDrawer({
 
             {tab === 'params' && (
               <div className="params-panel">
-                <div className="dossier__block-head">
-                  <p className="dossier__label">{command.params.length} parámetros explicados</p>
+                <div className="dossier__block-head params-panel__head">
+                  <div>
+                    <p className="dossier__label">{command.params.length} parámetros explicados</p>
+                    {optionCount > 0 && (
+                      <p className="params-panel__summary">
+                        +{optionCount} opciones anidadas listas para desplegar
+                      </p>
+                    )}
+                  </div>
                   <span className="params-panel__hint">Sintaxis: {command.syntax}</span>
                 </div>
                 <div className="params-table">
                   {command.params.map((param) => (
-                    <div className="param-row" key={param.flag}>
+                    <div
+                      className={cn(
+                        'param-row',
+                        (param.options?.length ?? 0) > 0 && 'param-row--nested',
+                      )}
+                      key={param.flag}
+                    >
                       <code className="param-row__flag">{param.flag}</code>
-                      <p>{param.desc}</p>
-                      {param.example && <code className="param-row__example">{param.example}</code>}
+                      <div className="param-row__body">
+                        <p>{param.desc}</p>
+                        {param.example && (
+                          <code className="param-row__example">{param.example}</code>
+                        )}
+                        {param.options?.length ? (
+                          <details className="param-options">
+                            <summary>
+                              <ChevronDown size={13} aria-hidden="true" />
+                              <span>
+                                Ver las {param.options.length} opciones de{' '}
+                                <strong>{param.flag.split(' ')[0]}</strong>
+                              </span>
+                            </summary>
+                            <ul>
+                              {param.options.map((option) => (
+                                <li key={option.value}>
+                                  <code className="param-options__value">{option.value}</code>
+                                  <div>
+                                    <p>{option.desc}</p>
+                                    {option.example && (
+                                      <code className="param-options__example">
+                                        {option.example}
+                                      </code>
+                                    )}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        ) : null}
+                      </div>
                     </div>
                   ))}
                 </div>

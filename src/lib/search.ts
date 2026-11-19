@@ -43,7 +43,11 @@ function commandSearchText(command: Command): string[] {
     command.summary,
     command.description,
     command.syntax,
-    ...command.params.flatMap((param) => [param.flag, param.desc]),
+    ...command.params.flatMap((param) => [
+      param.flag,
+      param.desc,
+      ...(param.options ?? []).flatMap((option) => [option.value, option.desc, option.example ?? '']),
+    ]),
     ...command.examples.flatMap((example) => [example.title, example.explain, example.code]),
     ...command.tips,
   ];
